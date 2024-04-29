@@ -19,6 +19,7 @@ const Counter: Component = () => {
     )
 }
 
+/// Gets the formatted string until [date]
 const getTimeUntil = (targetDate: string): string => {
     const now = new Date();
 
@@ -35,6 +36,7 @@ const getTimeUntil = (targetDate: string): string => {
     const absoluteMinutes = minutes % 60 > 0 ? (minutes % 60).toString().padStart(2, "0") : "";
     const absoluteSeconds = seconds % 60 > 0 ? (seconds % 60).toString().padStart(2, "0") : "";
 
+    // Format the time into strings
     const timeLeft = [absoluteDays, absoluteHours, absoluteMinutes, absoluteSeconds]
         .filter(part => part !== "")
         .join(":");
