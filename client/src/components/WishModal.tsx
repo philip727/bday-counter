@@ -17,7 +17,7 @@ const WishModal: Component = () => {
     return (
         <Show when={show()}>
             <Portal>
-                <div class="absolute">
+                <div class="absolute top-0 left-0">
                     <input
                         id="name-input"
                         value=""

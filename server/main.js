@@ -2,6 +2,10 @@ import { createServer, request } from "http";
 import { Server } from "socket.io";
 
 const PORT = 4000;
+// server data stored in json, only storing a few bits of data
+const storedData = {
+    totalWishes: 0,
+}
 
 const main = () => {
     const httpServer = createServer();
@@ -31,6 +35,7 @@ const main = () => {
 
             // Sends event back to client so we can display the birthday wish yay
             console.log(`${name} wished a happy birthday`);
+            storedData.totalWishes++;
             ioServer.emit("new_wish", name);
         });
 
