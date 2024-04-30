@@ -17,20 +17,22 @@ const WishModal: Component = () => {
     return (
         <Show when={show()}>
             <Portal>
-                <div class="absolute top-0 left-0">
-                    <input
-                        id="name-input"
-                        value=""
-                        placeholder="Your name"
-                        onkeyup={(e) => {
-                            setName(e.currentTarget.value);
-                        }}
-                    />
-                    <button
-                        onclick={() => {onWishClick(client(), name())}}
-                    >
-                        Send wishes
-                    </button>
+                <div class="absolute top-0 left-0 w-screen h-full flex justify-center items-center">
+                    <div class="h-20 w-32 border-2 border-black">
+                        <input
+                            id="name-input"
+                            value=""
+                            placeholder="Your name"
+                            onkeyup={(e) => {
+                                setName(e.currentTarget.value);
+                            }}
+                        />
+                        <button
+                            onclick={() => { onWishClick(client(), name()) }}
+                        >
+                            Send wishes
+                        </button>
+                    </div>
                 </div>
             </Portal>
         </Show>
