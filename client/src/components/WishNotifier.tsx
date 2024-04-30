@@ -35,9 +35,11 @@ const WishNotifier: Component = (props: any) => {
     return (
         <div>
             <For each={wishes}>
-                {(wish) => <div>
-                    {wish.name}
-                </div>}
+                {(wish) =>
+                    <div>
+                        {wish.name}
+                    </div>
+                }
             </For>
         </div>
     )

@@ -2,6 +2,7 @@ import type { Component } from 'solid-js';
 import { ClientProviderResponse, useClient } from './Client';
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { modalEvents } from '../scripts/modal';
 
 const WishButton: Component = () => {
     const [client] = useClient() as ClientProviderResponse;
@@ -16,7 +17,7 @@ const WishButton: Component = () => {
 }
 
 const onWishClick = (client: Socket<DefaultEventsMap, DefaultEventsMap>, name: string) => {
-    client.emit("wish", name);
+    modalEvents.send("open_name_modal");
 }
 
 
