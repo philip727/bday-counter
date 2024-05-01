@@ -62,7 +62,7 @@ const Counter: Component = () => {
 
 // gets the time until x date
 const getTimeUntil = (targetDate: Date): { absolute: AbsoluteTime, until: TimeUntil } => {
-    const now = new Date("2024-05-11");
+    const now = new Date();
     // tell us its the birthday
     if (now.getDate() == targetDate.getDate()
         && now.getMonth() == targetDate.getMonth()) {

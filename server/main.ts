@@ -7,7 +7,6 @@ const PORT = 4000;
 
 // no need for db when theres this much data
 let storedData = {
-    totalWishes: 0,
     names: [],
 }
 
@@ -21,6 +20,7 @@ const main = () => {
     const ioServer = new Server(httpServer, { cors: { origin: "*" } });
     const currentWishes: Wish[] = [];
 
+    // Makes sure the data actually exists meow
     if (fs.existsSync("./data.json")) {
         storedData = JSON.parse(fs.readFileSync('./data.json', 'utf8'));
     }
@@ -79,7 +79,6 @@ const main = () => {
             console.log(`${name} wished a happy birthday`);
 
             // Stores the wish
-            storedData.totalWishes++;
             storedData.names.push(name);
             currentWishes.push({ name: name, time: (Date.now() / 1000) });
 
