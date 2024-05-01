@@ -5,17 +5,19 @@ import { createClient } from './scripts/client';
 import { ClientProvider } from './components/Client';
 import WishNotifier from './components/WishNotifier';
 import WishModal from './components/WishModal';
+import Title from './components/Title';
 
 const App: Component = () => {
     const client = createClient("127.0.0.1:4000");
 
     return (
         <ClientProvider client={client}>
-            <div>
+            <div class="absolute top-0 left-0 w-screen h-full flex flex-col justify-center items-center">
+                <Title />
                 <Counter />
                 <WishButton />
-                <WishNotifier />
             </div>
+            <WishNotifier />
             <WishModal />
         </ClientProvider>
     );

@@ -8,7 +8,7 @@ const WishButton: Component = () => {
     const [client] = useClient() as ClientProviderResponse;
     
     return (
-        <div>
+        <div class="w-96">
             <button onclick={() => onWishClick(client(), "philip")}>
                 Wish Birthday
             </button>
