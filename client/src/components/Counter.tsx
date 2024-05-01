@@ -1,47 +1,108 @@
-import { createSignal, type Component } from 'solid-js';
+import { For, createSignal, type Component } from 'solid-js';
+
+// The actual total in that unit of time
+type AbsoluteTime = {
+    seconds: number,
+    minutes: number,
+    hours: number,
+    days: number,
+}
+
+type TimeUntil = {
+    seconds: number,
+    minutes: number,
+    hours: number,
+    days: number,
+}
 
 const Counter: Component = () => {
-    const [timeUntil, setTimeUntil] = createSignal("");
+    let now = new Date();
+    const targetYear = now.getFullYear();
+    const targetDate = `${targetYear.toString()}-05-11`
+    const [timeUntil, setTimeUntil] = createSignal<TimeUntil>(getTimeUntil(targetDate).until);
 
     setInterval(() => {
-        const now = new Date();
-        const targetYear = now.getFullYear();
-        const targetDate = `${targetYear.toString()}-05-11`
         const timeLeft = getTimeUntil(targetDate);
 
-        setTimeUntil(timeLeft);
+        setTimeUntil(timeLeft.until);
     }, 1000);
 
     return (
-        <div>
-            <h1>{timeUntil()}</h1>
+        <div class="w-96 flex flex-row justify-center items-center text-center text-white gap-8">
+            <div>
+                <p class="text-7xl font-bold tracking-widest">
+                    {timeUntil().days.toString().padStart(2, "0")}
+                </p>
+                <p class="font-semibold text-xl poppins">days</p>
+            </div>
+            <h1 class="poppins text-7xl">:</h1>
+            <div>
+                <p class="text-7xl font-bold tracking-widest">
+                    {timeUntil().hours.toString().padStart(2, "0")}
+                </p>
+                <p class="font-semibold text-xl poppins">hours</p>
+            </div>
+            <h1 class="poppins text-7xl">:</h1>
+            <div>
+                <p class="text-7xl font-bold tracking-widest">
+                    {timeUntil().minutes.toString().padStart(2, "0")}
+                </p>
+                <p class="font-semibold text-xl poppins">minutes</p>
+            </div>
+            <h1 class="poppins text-7xl">:</h1>
+            <div>
+                <p class="text-7xl font-bold tracking-widest">
+                    {timeUntil().seconds.toString().padStart(2, "0")}
+                </p>
+                <p class="font-semibold text-xl poppins">seconds</p>
+            </div>
         </div>
     )
 }
 
+const destructTimeUntil = (timeUntil: TimeUntil): Array<number> => {
+    return [timeUntil.days, timeUntil.hours, timeUntil.minutes, timeUntil.seconds];
+}
+
 /// Gets the formatted string until [date]
-const getTimeUntil = (targetDate: string): string => {
+const getTimeUntil = (targetDate: string): { absolute: AbsoluteTime, until: TimeUntil } => {
     const now = new Date();
+    const timeResult: { absolute: AbsoluteTime, until: TimeUntil }
+        =
+    {
+        absolute: {
+            seconds: 0,
+            minutes: 0,
+            hours: 0,
+            days: 0
+        },
+        until: {
+            seconds: 0,
+            minutes: 0,
+            hours: 0,
+            days: 0
+        }
+    };
 
     const futureDate = new Date(targetDate);
     const difference = futureDate.getTime() - now.getTime();
 
-    const seconds = Math.floor(difference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+    const totalSeconds = Math.floor(difference / 1000);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalDays = Math.floor(totalHours / 24);
 
-    const absoluteDays = days > 0 ? days.toString() : "";
-    const absoluteHours = hours % 24 > 0 ? (hours % 24).toString().padStart(2, "0") : "";
-    const absoluteMinutes = minutes % 60 > 0 ? (minutes % 60).toString().padStart(2, "0") : "";
-    const absoluteSeconds = seconds % 60 > 0 ? (seconds % 60).toString().padStart(2, "0") : "";
+    timeResult.absolute.seconds = totalSeconds;
+    timeResult.absolute.minutes = totalMinutes;
+    timeResult.absolute.hours = totalHours;
+    timeResult.absolute.days = totalDays;
 
-    // Format the time into strings
-    const timeLeft = [absoluteDays, absoluteHours, absoluteMinutes, absoluteSeconds]
-        .filter(part => part !== "")
-        .join(":");
+    timeResult.until.days = totalDays;
+    timeResult.until.hours = totalHours % 24;
+    timeResult.until.minutes = totalMinutes % 60;
+    timeResult.until.seconds = totalSeconds % 60;
 
-    return timeLeft
+    return timeResult;
 }
 
 
