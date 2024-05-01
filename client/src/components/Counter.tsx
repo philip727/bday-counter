@@ -1,4 +1,5 @@
 import { For, createSignal, type Component } from 'solid-js';
+import { setIsBirthday } from '../scripts/wished';
 
 // The actual total in that unit of time
 type AbsoluteTime = {
@@ -16,14 +17,13 @@ type TimeUntil = {
 }
 
 const Counter: Component = () => {
-    let now = new Date();
+    const now = new Date();
     const targetYear = now.getFullYear();
-    const targetDate = `${targetYear.toString()}-05-11`
+    const targetDate = new Date(`${targetYear.toString()}-05-11`)
     const [timeUntil, setTimeUntil] = createSignal<TimeUntil>(getTimeUntil(targetDate).until);
 
     setInterval(() => {
         const timeLeft = getTimeUntil(targetDate);
-
         setTimeUntil(timeLeft.until);
     }, 1000);
 
@@ -60,13 +60,15 @@ const Counter: Component = () => {
     )
 }
 
-const destructTimeUntil = (timeUntil: TimeUntil): Array<number> => {
-    return [timeUntil.days, timeUntil.hours, timeUntil.minutes, timeUntil.seconds];
-}
+// gets the time until x date
+const getTimeUntil = (targetDate: Date): { absolute: AbsoluteTime, until: TimeUntil } => {
+    const now = new Date("2024-05-11");
+    // tell us its the birthday
+    if (now.getDate() == targetDate.getDate()
+        && now.getMonth() == targetDate.getMonth()) {
+        setIsBirthday(true);
+    }
 
-/// Gets the formatted string until [date]
-const getTimeUntil = (targetDate: string): { absolute: AbsoluteTime, until: TimeUntil } => {
-    const now = new Date();
     const timeResult: { absolute: AbsoluteTime, until: TimeUntil }
         =
     {
@@ -84,8 +86,7 @@ const getTimeUntil = (targetDate: string): { absolute: AbsoluteTime, until: Time
         }
     };
 
-    const futureDate = new Date(targetDate);
-    const difference = futureDate.getTime() - now.getTime();
+    const difference = targetDate.getTime() - now.getTime();
 
     const totalSeconds = Math.floor(difference / 1000);
     const totalMinutes = Math.floor(totalSeconds / 60);

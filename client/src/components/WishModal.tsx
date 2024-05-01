@@ -1,9 +1,10 @@
-import { Show, createSignal, type Component } from 'solid-js';
+import { Match, Show, Switch, createSignal, type Component } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import { modalEvents } from '../scripts/modal';
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { ClientProviderResponse, useClient } from './Client';
+import { hasWished, updateWished } from '../scripts/wished';
 
 const WishModal: Component = () => {
     const [client] = useClient() as ClientProviderResponse;
@@ -12,6 +13,11 @@ const WishModal: Component = () => {
 
     modalEvents.on("open_name_modal", () => {
         setShow(prev => !prev);
+    })
+
+    modalEvents.on("modal_close", () => {
+        setShow(false);
+        setName("");
     })
 
     return (
@@ -47,7 +53,13 @@ const WishModal: Component = () => {
 }
 
 const onWishClick = (client: Socket<DefaultEventsMap, DefaultEventsMap>, name: string) => {
+    if (!name || /\d/.test(name) || /\s/g.test(name) || name.length > 7) {
+        return;
+    }
+
     client.emit("wish", name);
+    modalEvents.send("modal_close");
+    updateWished(true);
 }
 
 export default WishModal;

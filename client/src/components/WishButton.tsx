@@ -1,22 +1,37 @@
-import type { Component } from 'solid-js';
+import { Match, Switch, type Component } from 'solid-js';
 import { ClientProviderResponse, useClient } from './Client';
-import { Socket } from 'socket.io-client';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { modalEvents } from '../scripts/modal';
+import { hasWished } from '../scripts/wished';
 
 const WishButton: Component = () => {
-    const [client] = useClient() as ClientProviderResponse;
-    
     return (
-        <div class="w-96">
-            <button onclick={() => onWishClick(client(), "philip")}>
-                Wish Birthday
+        <div class="w-96 flex items-center justify-center mt-10">
+            <button
+                onclick={() => onWishClick()}
+                class="h-16 w-56 bg-white rounded-2xl shadow-two"
+            >
+                <Switch>
+                    <Match when={hasWished()}>
+                        <p class="font-semibold tracking-widest text-3xl text-[var(--pastel-yellow)]">
+                            {"Thank you <3"}
+                        </p>
+                    </Match>
+                    <Match when={!hasWished()}>
+                        <p class="font-semibold tracking-widest text-3xl text-[var(--pastel-yellow)]">
+                            Wish Birthday
+                        </p>
+                    </Match>
+                </Switch>
             </button>
         </div>
     )
 }
 
-const onWishClick = (client: Socket<DefaultEventsMap, DefaultEventsMap>, name: string) => {
+const onWishClick = () => {
+    if (hasWished()) {
+        return;
+    }
+
     modalEvents.send("open_name_modal");
 }
 
